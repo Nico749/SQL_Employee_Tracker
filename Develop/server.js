@@ -8,7 +8,7 @@ const app = express();
 // Express middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-console.log(process.env.DB_USER)
+
 // Connect to database
 const db = mysql.createConnection(
   {
@@ -49,12 +49,13 @@ const getChoice = () => {
 
 
 
-// Query database
-db.query('SELECT * FROM employee', function (err, results) {
-  console.log(results);
-});
+// // Query database
+// db.query('SELECT * FROM employee', function (err, results) {
+//   console.log(results);
+// });
 
-app.get('/api/departments',(req,res) =>{
+//get request to retrieve all the existing departments
+app.get('/api/department',(req,res) =>{
   console.log(`New ${req.method} request received`)
   const sql = `SELECT * FROM department`
   db.query(sql, function (err, results) {
@@ -63,6 +64,7 @@ app.get('/api/departments',(req,res) =>{
     });  
 })
 
+//get request to retrieve all the existing roles
 app.get('/api/role',(req,res) =>{
   console.log(`New ${req.method} request received`)
   const sql = `SELECT * FROM role`
@@ -72,6 +74,17 @@ app.get('/api/role',(req,res) =>{
     });  
 })
 
+//get request to retrieve all the existing employees
+app.get('/api/employee',(req,res) =>{
+  console.log(`New ${req.method} request received`)
+  const sql = `SELECT * FROM employee`
+  db.query(sql, function (err, results) {
+      console.log(results);
+      res.json(results)
+    });  
+})
+
+//post requets to add a new department 
 app.post('/api/add-department',(req,res) =>{
   console.log(`New ${req.method} request received`)
   const sql = `INSERT INTO department (name) VALUES (?)`;
@@ -89,10 +102,64 @@ app.post('/api/add-department',(req,res) =>{
   })
 })
 
+//post request to add a new role
+app.post('/api/add-role',(req,res) =>{
+  console.log(`New ${req.method} request received`)
+  const sql = `INSERT INTO role (title,salary,department_id) VALUES (?,?,?)`;
+  const value = [req.body.title, req.body.salary, req.body.department_id];  
+  db.query(sql,value,(err,result)=>{
+    if(err){
+      res.status(400).json({error:err.message})
+      return;
+    }
+    res.json({
+      message:'success',
+      data:req.body
+    })
+    console.log(`${req.body.title} added to the database!`)
+  })
+})
+
+//post request to add a new employee
+app.post('/api/add-employee',(req,res) =>{
+  console.log(`New ${req.method} request received`)
+  const sql = `INSERT INTO employee (first_name,last_name,role_id,manager_id) VALUES (?,?,?,?)`;
+  const value = [req.body.first_name, req.body.last_name, req.body.role_id,req.body.manager_id];  
+  db.query(sql,value,(err,result)=>{
+    if(err){
+      res.status(400).json({error:err.message})
+      return;
+    }
+    res.json({
+      message:'success',
+      data:req.body
+    })
+    console.log(`${req.body.first_name} added to the database!`)
+  })
+})
+
+//put request to update the role of an existing employee
+app.put('/api/update-role',(req,res) =>{
+  console.log(`New ${req.method} request received`)
+  const sql = `UPDATE employee SET role_id = ? WHERE first_name = ?`;
+  const value = [req.body.role_id,req.body.first_name];  
+  db.query(sql,value,(err,result)=>{
+    if(err){
+      res.status(400).json({error:err.message})
+      return;
+    }
+    res.json({
+      message:'success',
+      data:req.body
+    })
+    console.log(`Updated role for ${req.body.first_name}!`)
+  })
+})
+
 // Default response for any other request (Not Found)
-// app.use((req, res) => {
-//   res.status(404).end();
-// });
+app.use((req, res) => {
+  res.status(404).end();
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
