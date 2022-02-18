@@ -1,2 +1,6 @@
 node_modules
 .env
+queries_trial
+trial.js
+methods_for_trial.js
+
