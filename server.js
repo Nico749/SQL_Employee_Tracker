@@ -45,43 +45,40 @@ const getChoice = () => {
           "Exit"],
       },
     ])
-  .then((res) => {
-      switch(res.choice) {
-          case "View all departments":
-              getDepartments()
-             
+    .then((res) => {
+      switch (res.choice) {
+        case "View all departments":
+          getDepartments()
           break
-          case "View all roles":
-              getRole()
-            
+        case "View all roles":
+          getRole()
           break
-          case "View all employees":
-              getEmployee()
-              
+        case "View all employees":
+          getEmployee()
           break
-          case "Add a department":
-              //addDepartment()
+        case "Add a department":
+          addDepartment()
           break
-          case "Add a role":
-            
+        case "Add a role":
+          addRole()
           break
-          
-          case "Add an employee":
+
+        case "Add an employee":
 
           break
 
-          case "Update an employee role":
+        case "Update an employee role":
 
           break
 
-          case "Exit": 
-            return
-           
-          default:
-            return
-        }
-  
-  });
+        case "Exit":
+          return
+
+        default:
+          return
+      }
+
+    });
 }; 
   
 
@@ -120,41 +117,58 @@ const getEmployee = () => {
   })
 }
 
-//post requets to add a new department 
-// app.post('/api/add-department',(req,res) =>{
-//   console.log(`New ${req.method} request received`)
-//   const sql = `INSERT INTO department (name) VALUES (?)`;
-//   const value = [req.body.name];  
-//   db.query(sql,value,(err,result)=>{
-//     if(err){
-//       res.status(400).json({error:err.message})
-//       return;
-//     }
-//     res.json({
-//       message:'success',
-//       data:req.body
-//     })
-//     console.log(`${req.body.name} added to the database!`)
-//   })
-// })
 
-// //post request to add a new role
-// app.post('/api/add-role',(req,res) =>{
-//   console.log(`New ${req.method} request received`)
-//   const sql = `INSERT INTO role (title,salary,department_id) VALUES (?,?,?)`;
-//   const value = [req.body.title, req.body.salary, req.body.department_id];  
-//   db.query(sql,value,(err,result)=>{
-//     if(err){
-//       res.status(400).json({error:err.message})
-//       return;
-//     }
-//     res.json({
-//       message:'success',
-//       data:req.body
-//     })
-//     console.log(`${req.body.title} added to the database!`)
-//   })
-// })
+const addDepartment = () => {
+  inquirer
+    .prompt([
+      {
+        name: "department_name",
+        message: "Department name:",
+      },
+    ])
+    .then((res) => {
+      //console.log(res.department_name)
+      const sql = `INSERT INTO department (name) VALUES (?)`;
+      const value = res.department_name;
+      db.query(sql, value, (err, result) => {
+        if (err) {
+          console.log(err)
+        }
+        console.log(`${res.department_name} added to the database!`)
+      })
+    }
+    )}
+
+
+
+//post request to add a new role
+const addRole = () => {
+  inquirer
+  .prompt([
+    {
+      name: "role_title",
+      message: "Role title:",
+    },
+    {
+      name: "role_salary",
+      message: "Role salary:",
+    },
+    {
+      name: "department_id",
+      message: "Department id:",
+    },
+  ])
+  .then((res) => {
+  const sql = `INSERT INTO role (title,salary,department_id) VALUES (?,?,?)`;
+  const value = [res.role_title, res.role_salary, res.department_id];  
+  db.query(sql, value, (err, result) => {
+    if (err) {
+      console.log(err)
+    }
+    console.log(`${res.role_title} added to the database!`)
+  })
+}
+  )}
 
 // //post request to add a new employee
 // app.post('/api/add-employee',(req,res) =>{
@@ -196,6 +210,8 @@ const getEmployee = () => {
 // app.use((req, res) => {
 //   res.status(404).end();
 // });
+
+
 getChoice()
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
