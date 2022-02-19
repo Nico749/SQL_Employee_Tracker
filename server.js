@@ -62,17 +62,14 @@ const getChoice = () => {
         case "Add a role":
           addRole()
           break
-
         case "Add an employee":
-
+          addEmployee()
           break
-
         case "Update an employee role":
-
+          updateRole()
           break
-
         case "Exit":
-          return
+          break
 
         default:
           return
@@ -170,46 +167,66 @@ const addRole = () => {
 }
   )}
 
-// //post request to add a new employee
-// app.post('/api/add-employee',(req,res) =>{
-//   console.log(`New ${req.method} request received`)
-//   const sql = `INSERT INTO employee (first_name,last_name,role_id,manager_id) VALUES (?,?,?,?)`;
-//   const value = [req.body.first_name, req.body.last_name, req.body.role_id,req.body.manager_id];  
-//   db.query(sql,value,(err,result)=>{
-//     if(err){
-//       res.status(400).json({error:err.message})
-//       return;
-//     }
-//     res.json({
-//       message:'success',
-//       data:req.body
-//     })
-//     console.log(`${req.body.first_name} added to the database!`)
-//   })
-// })
+//post request to add a new employee
+const addEmployee = () => {
+  inquirer
+    .prompt([
+      {
+        name: "first_name",
+        message: "Name:",
+      },
+      {
+        name: "last_name",
+        message: "Last name:",
+      },
+      {
+        name: "role_id",
+        message: "Role id:",
+      },
+      {
+        name: "manager_id",
+        message: "Manager id:",
+      },
+    ])
+    .then((res) => {
+      const sql = `INSERT INTO employee (first_name,last_name,role_id,manager_id) VALUES (?,?,?,?)`;
+      const value = [res.first_name, res.last_name, res.role_id, res.manager_id];
+      db.query(sql, value, (err, result) => {
+        if (err) {
+          console.log(err)
+        }
+        console.log(`${res.first_name} ${res.last_name} added to the database!`)
+      })
+    }
+    )
+}
 
-// //put request to update the role of an existing employee
-// app.put('/api/update-role',(req,res) =>{
-//   console.log(`New ${req.method} request received`)
-//   const sql = `UPDATE employee SET role_id = ? WHERE first_name = ?`;
-//   const value = [req.body.role_id,req.body.first_name];  
-//   db.query(sql,value,(err,result)=>{
-//     if(err){
-//       res.status(400).json({error:err.message})
-//       return;
-//     }
-//     res.json({
-//       message:'success',
-//       data:req.body
-//     })
-//     console.log(`Updated role for ${req.body.first_name}!`)
-//   })
-// })
+//put request to update the role of an existing employee
+const updateRole = () => {
+  inquirer
+    .prompt([
+      {
+        name: "first_name",
+        message: "Name:",
+      },
+      {
+        name: "new_role",
+        message: "New role id:",
+      },
 
-// // Default response for any other request (Not Found)
-// app.use((req, res) => {
-//   res.status(404).end();
-// });
+    ])
+    .then((res) => {
+      const sql = `UPDATE employee SET role_id = ? WHERE first_name = ?`;
+      const value = [res.new_role, res.first_name];
+      db.query(sql, value, (err, result) => {
+        if (err) {
+          console.log(err)
+        }
+        console.log(`${res.first_name} new role updated to the database!`)
+      })
+    }
+    )
+}
 
 
 getChoice()
