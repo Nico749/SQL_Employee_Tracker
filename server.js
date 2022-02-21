@@ -40,6 +40,7 @@ const db =  mysql.createConnection(
 
 
 const getChoice = () => {
+  
   inquirer
     .prompt([
       {
@@ -92,10 +93,10 @@ const getChoice = () => {
           deleteEmployee()
           break
         case "Exit":
-          break
+          return db.end()
 
-        default:
-          return
+        // default:
+        //   return
       }
 
     });
@@ -112,8 +113,9 @@ const getDepartments = () => {
       console.log(err)
     }
     console.table(results)
+    getChoice()
   })
-getChoice()
+
 }
 
 //get request to retrieve all the existing roles
@@ -124,7 +126,9 @@ const getRole = () => {
       console.log(err)
     }
     console.table(results)
+    getChoice()
   })
+  
 }
 
 //get request to retrieve all the existing employees
@@ -135,6 +139,7 @@ const getEmployee = () => {
       console.log(err)
     }
     console.table(results)
+    getChoice()
   })
 }
 
@@ -156,7 +161,8 @@ const addDepartment = () => {
           console.log(err)
         }
         console.log(`${res.department_name} added to the database!`)
-        getDepartments()
+        //getDepartments()
+        getChoice()
       })
     }
     )}
@@ -188,7 +194,8 @@ const addRole = () => {
       console.log(err)
     }
     console.log(`${res.role_title} added to the database!`)
-    getRole()
+    //getRole()
+    getChoice()
   })
 }
   )}
@@ -222,7 +229,8 @@ const addEmployee = () => {
           console.log(err)
         }
         console.log(`${res.first_name} ${res.last_name} added to the database!`)
-        getEmployee()
+        //getEmployee()
+        getChoice()
       })
     }
     )
@@ -250,7 +258,8 @@ const updateRole = () => {
           console.log(err)
         }
         console.log(`${res.first_name} new role updated to the database!`)
-        getRole()
+        //getRole()
+        getChoice()
       })
     }
     )
@@ -273,7 +282,8 @@ const deleteRole = () => {
           console.log(err)
         }
         console.log(`${res.title} role deleted!`)
-        getRole()
+        //getRole()
+        getChoice()
       })
     }
     )
@@ -295,7 +305,8 @@ const deleteDepartment = () => {
           console.log(err)
         }
         console.log(`${res.name} department deleted!`)
-        getDepartments()
+        //getDepartments()
+        getChoice()
       })
     }
     )
@@ -317,7 +328,8 @@ const deleteEmployee = () => {
           console.log(err)
         }
         console.log(`${res.last_name} deleted from database!`)
-        getEmployee()
+        //getEmployee()
+        getChoice()
       })
     }
     )
