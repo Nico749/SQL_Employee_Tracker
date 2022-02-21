@@ -10,7 +10,18 @@ const app = express();
 
 // Express middleware
 app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+app.use(express.json())
+var figlet = require('figlet');
+
+const getFiglet =() =>{figlet('Employee tracker!!', function(err, data) {
+    if (err) {
+        console.log('Something went wrong...');
+        console.dir(err);
+        return;
+    }
+    console.log(data)
+})
+}
 
 // Connect to database
 const db =  mysql.createConnection(
@@ -88,8 +99,9 @@ const getDepartments = () => {
     if (err) {
       console.log(err)
     }
-    console.log(results)
+    console.table(results)
   })
+getChoice()
 }
 
 //get request to retrieve all the existing roles
@@ -99,7 +111,7 @@ const getRole = () => {
     if (err) {
       console.log(err)
     }
-    console.log(results)
+    console.table(results)
   })
 }
 
@@ -110,7 +122,7 @@ const getEmployee = () => {
     if (err) {
       console.log(err)
     }
-    console.log(results)
+    console.table(results)
   })
 }
 
@@ -228,10 +240,14 @@ const updateRole = () => {
     )
 }
 
+// app.listen(PORT, () => {
+//   console.log(`Server running on port ${PORT}`);
+// })
 
+//getFiglet()
 getChoice()
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+
+
+
 
 
