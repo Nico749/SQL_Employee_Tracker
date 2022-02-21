@@ -36,6 +36,7 @@ The following image shows the web application's appearance:
 Room for improvement:
 * Code refactoring 
 * Data validation when adding or deleting items can be implemented
+* Some minor bugs in the data visualization
 
 ## Installation
 

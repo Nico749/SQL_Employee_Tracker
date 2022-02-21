@@ -1,46 +1,39 @@
-const express = require('express')
+//const express = require('express')
 const mysql = require('mysql2')
-const inquirer = require ('inquirer')
-//const getChoice = require ('./trial')
-//const { get } = require('express/lib/response')
+const inquirer = require('inquirer')
 
 require('dotenv').config()
- const PORT = process.env.PORT || 3001
-const app = express();
+//const app = express();
 
 // Express middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json())
-var figlet = require('figlet');
+// app.use(express.urlencoded({ extended: false }));
+// app.use(express.json())
+// var figlet = require('figlet');
 
-const getFiglet =() =>{figlet('Employee tracker!!', function(err, data) {
-    if (err) {
-        console.log('Something went wrong...');
-        console.dir(err);
-        return;
-    }
-    console.log(data)
-})
-}
+// const getFiglet =() =>{figlet('Employee tracker!!', function(err, data) {
+//     if (err) {
+//         console.log('Something went wrong...');
+//         console.dir(err);
+//         return;
+//     }
+//     console.log(data)
+// })
+// }
 
 // Connect to database
-const db =  mysql.createConnection(
+const db = mysql.createConnection(
   {
     host: 'localhost',
-    // MySQL username,
     user: process.env.DB_USER,
-    // MySQL password
     password: process.env.DB_PWD,
     database: process.env.DB_NAME
   },
- console.log("Connected!")
-  );
+  console.log("Connected!")
+);
 
-
-
-
+//initial menu
 const getChoice = () => {
-  
+
   inquirer
     .prompt([
       {
@@ -94,18 +87,12 @@ const getChoice = () => {
           break
         case "Exit":
           return db.end()
-
-        // default:
-        //   return
       }
 
     });
 };
 
-
-
-
-//get request to retrieve all the existing departments
+//query to retrieve all the existing departments
 const getDepartments = () => {
   const sql = `SELECT * FROM department`
   db.query(sql, function (err, results) {
@@ -118,7 +105,7 @@ const getDepartments = () => {
 
 }
 
-//get request to retrieve all the existing roles
+//query to retrieve all the existing roles
 const getRole = () => {
   const sql = `SELECT * FROM role`
   db.query(sql, function (err, results) {
@@ -128,10 +115,10 @@ const getRole = () => {
     console.table(results)
     getChoice()
   })
-  
+
 }
 
-//get request to retrieve all the existing employees
+//query to retrieve all the existing employees
 const getEmployee = () => {
   const sql = `SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary,department.name AS department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id`
   db.query(sql, function (err, results) {
@@ -143,7 +130,7 @@ const getEmployee = () => {
   })
 }
 
-
+//query to add a new department to the db
 const addDepartment = () => {
   inquirer
     .prompt([
@@ -165,42 +152,42 @@ const addDepartment = () => {
         getChoice()
       })
     }
-    )}
+    )
+}
 
-
-
-//post request to add a new role
+//query to add a new role
 const addRole = () => {
   inquirer
-  .prompt([
-    {
-      name: "role_title",
-      message: "Role title:",
-    },
-    {
-      name: "role_salary",
-      message: "Role salary:",
-    },
-    {
-      name: "department_id",
-      message: "Department id:",
-    },
-  ])
-  .then((res) => {
-  const sql = `INSERT INTO role (title,salary,department_id) VALUES (?,?,?)`;
-  const value = [res.role_title, res.role_salary, res.department_id];  
-  db.query(sql, value, (err, result) => {
-    if (err) {
-      console.log(err)
+    .prompt([
+      {
+        name: "role_title",
+        message: "Role title:",
+      },
+      {
+        name: "role_salary",
+        message: "Role salary:",
+      },
+      {
+        name: "department_id",
+        message: "Department id:",
+      },
+    ])
+    .then((res) => {
+      const sql = `INSERT INTO role (title,salary,department_id) VALUES (?,?,?)`;
+      const value = [res.role_title, res.role_salary, res.department_id];
+      db.query(sql, value, (err, result) => {
+        if (err) {
+          console.log(err)
+        }
+        console.log(`${res.role_title} added to the database!`)
+        //getRole()
+        getChoice()
+      })
     }
-    console.log(`${res.role_title} added to the database!`)
-    //getRole()
-    getChoice()
-  })
+    )
 }
-  )}
 
-//post request to add a new employee
+//query to add a new employee
 const addEmployee = () => {
   inquirer
     .prompt([
@@ -236,7 +223,7 @@ const addEmployee = () => {
     )
 }
 
-//put request to update the role of an existing employee
+//query to update the role of an existing employee
 const updateRole = () => {
   inquirer
     .prompt([
@@ -265,7 +252,7 @@ const updateRole = () => {
     )
 }
 
-
+//delete an existing role
 const deleteRole = () => {
   inquirer
     .prompt([
@@ -289,6 +276,7 @@ const deleteRole = () => {
     )
 }
 
+//delete an existing department
 const deleteDepartment = () => {
   inquirer
     .prompt([
@@ -312,6 +300,7 @@ const deleteDepartment = () => {
     )
 }
 
+//delete an existing employee
 const deleteEmployee = () => {
   inquirer
     .prompt([
@@ -335,13 +324,7 @@ const deleteEmployee = () => {
     )
 }
 
-
-
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-// })
-
-//getFiglet()
+//start the application
 getChoice()
 
 
