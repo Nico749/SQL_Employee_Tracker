@@ -3,22 +3,6 @@ const mysql = require('mysql2')
 const inquirer = require('inquirer')
 
 require('dotenv').config()
-//const app = express();
-
-// Express middleware
-// app.use(express.urlencoded({ extended: false }));
-// app.use(express.json())
-// var figlet = require('figlet');
-
-// const getFiglet =() =>{figlet('Employee tracker!!', function(err, data) {
-//     if (err) {
-//         console.log('Something went wrong...');
-//         console.dir(err);
-//         return;
-//     }
-//     console.log(data)
-// })
-// }
 
 // Connect to database
 const db = mysql.createConnection(
