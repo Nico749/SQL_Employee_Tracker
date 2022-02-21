@@ -53,6 +53,9 @@ const getChoice = () => {
           "Add a role",
           "Add an employee",
           "Update an employee role",
+          "Delete role",
+          "Delete department",
+          "Delete employee",
           "Exit"],
       },
     ])
@@ -79,6 +82,15 @@ const getChoice = () => {
         case "Update an employee role":
           updateRole()
           break
+        case "Delete role":
+          deleteRole()
+          break
+        case "Delete department":
+          deleteDepartment()
+          break
+        case "Delete employee":
+          deleteEmployee()
+          break
         case "Exit":
           break
 
@@ -87,8 +99,8 @@ const getChoice = () => {
       }
 
     });
-}; 
-  
+};
+
 
 
 
@@ -144,6 +156,7 @@ const addDepartment = () => {
           console.log(err)
         }
         console.log(`${res.department_name} added to the database!`)
+        getDepartments()
       })
     }
     )}
@@ -175,6 +188,7 @@ const addRole = () => {
       console.log(err)
     }
     console.log(`${res.role_title} added to the database!`)
+    getRole()
   })
 }
   )}
@@ -208,6 +222,7 @@ const addEmployee = () => {
           console.log(err)
         }
         console.log(`${res.first_name} ${res.last_name} added to the database!`)
+        getEmployee()
       })
     }
     )
@@ -235,10 +250,80 @@ const updateRole = () => {
           console.log(err)
         }
         console.log(`${res.first_name} new role updated to the database!`)
+        getRole()
       })
     }
     )
 }
+
+
+const deleteRole = () => {
+  inquirer
+    .prompt([
+      {
+        name: "title",
+        message: "Name:",
+      },
+    ])
+    .then((res) => {
+      const sql = `DELETE FROM role WHERE title = ?`;
+      const value = [res.title];
+      db.query(sql, value, (err, result) => {
+        if (err) {
+          console.log(err)
+        }
+        console.log(`${res.title} role deleted!`)
+        getRole()
+      })
+    }
+    )
+}
+
+const deleteDepartment = () => {
+  inquirer
+    .prompt([
+      {
+        name: "name",
+        message: "Name:",
+      },
+    ])
+    .then((res) => {
+      const sql = `DELETE FROM department WHERE name = ?`;
+      const value = [res.name];
+      db.query(sql, value, (err, result) => {
+        if (err) {
+          console.log(err)
+        }
+        console.log(`${res.name} department deleted!`)
+        getDepartments()
+      })
+    }
+    )
+}
+
+const deleteEmployee = () => {
+  inquirer
+    .prompt([
+      {
+        name: "last_name",
+        message: "Last name of the employee you want to delete:",
+      },
+    ])
+    .then((res) => {
+      const sql = `DELETE FROM employee WHERE last_name = ?`;
+      const value = [res.last_name];
+      db.query(sql, value, (err, result) => {
+        if (err) {
+          console.log(err)
+        }
+        console.log(`${res.last_name} deleted from database!`)
+        getEmployee()
+      })
+    }
+    )
+}
+
+
 
 // app.listen(PORT, () => {
 //   console.log(`Server running on port ${PORT}`);
