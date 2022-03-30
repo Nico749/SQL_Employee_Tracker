@@ -25,7 +25,8 @@ Project is created with:
 ## Working Application
 
 The following image shows the web application's appearance:
-![Employee tracker](./Demo/Screenshot_sql.png)
+![Employee tracker](./Demo/Screenshot_sql.png)<br>
+Click [here]( https://drive.google.com/file/d/1NCzj-cHnNf8OwPI1rGV62xxY-93ejvKu/view) for a short walkthrough video of the working application
 
 ## Project Status
 
